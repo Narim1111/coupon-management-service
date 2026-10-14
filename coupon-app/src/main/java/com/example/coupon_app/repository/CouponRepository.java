@@ -1,0 +1,10 @@
+package com.example.coupon_app.repository;
+
+import com.example.coupon_app.entity.Coupon;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
+
+public interface CouponRepository extends JpaRepository<Coupon, Integer> {
+    List<Coupon> findByUserId(Integer userId);
+}
