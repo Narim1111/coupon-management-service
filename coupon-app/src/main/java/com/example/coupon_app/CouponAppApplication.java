@@ -20,7 +20,7 @@ public class CouponAppApplication {
             couponRepository.findAll().forEach(System.out::println);
 
             System.out.println("\n=== КУПОНЫ ПОЛЬЗОВАТЕЛЯ С ID = 1 ===");
-            couponRepository.findByUserId(1).forEach(System.out::println);
+            couponRepository.findByUserId(1L).forEach(System.out::println);
         };
     }
 

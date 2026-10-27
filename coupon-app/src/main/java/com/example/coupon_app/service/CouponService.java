@@ -1,41 +1,33 @@
 package com.example.coupon_app.service;
 
+import com.example.coupon_app.dto.CouponRequestDto;
 import com.example.coupon_app.entity.Coupon;
+import com.example.coupon_app.entity.User;
+import com.example.coupon_app.exception.UserNotFoundException;
+import com.example.coupon_app.repository.UserRepository;
 import com.example.coupon_app.repository.CouponRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 @Service
 public class CouponService{
+
     private final CouponRepository couponRepository;
+    private final UserRepository userRepository;
 
-    public CouponService(CouponRepository couponRepository){
+    public CouponService(CouponRepository couponRepository, UserRepository userRepository){
         this.couponRepository = couponRepository;
+        this.userRepository = userRepository;
     }
 
-    public List<Coupon> getAllCoupons(){
-        return couponRepository.findAll();
-    }
+    public Coupon createCoupon(CouponRequestDto dto){
+        User user = userRepository.findById(dto.getUserId()).orElseThrow(() -> new UserNotFoundException(dto.getUserId()));
 
-    public List<Coupon> getCouponsByUserId(Integer userId){
-        return couponRepository.findByUserId(userId);
-    }
+        Coupon coupon = new Coupon();
+        coupon.setCode(dto.getCode());
+        coupon.setDiscountPercent(dto.getDiscountPercent());
 
-    public Coupon createCoupon(Coupon coupon){
+        coupon.setUser(user);
+
         return couponRepository.save(coupon);
-    }
-
-    public void deleteCoupon(Integer id){
-        couponRepository.deleteById(id);
-    }
-
-    public Coupon updateCoupon(Integer id, Coupon updatedCoupon){
-        Coupon existingCoupon = couponRepository.findById(id).orElseThrow(() -> new RuntimeException("Coupon not found with id = " + id));
-
-        existingCoupon.setCode(updatedCoupon.getCode());
-        existingCoupon.setDiscountPercent(updatedCoupon.getDiscountPercent());
-        existingCoupon.setUserId(updatedCoupon.getUserId());
-
-        return couponRepository.save(existingCoupon);
     }
 }

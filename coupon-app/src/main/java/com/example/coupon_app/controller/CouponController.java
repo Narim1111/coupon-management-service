@@ -1,10 +1,11 @@
 package com.example.coupon_app.controller;
 
+import com.example.coupon_app.dto.CouponRequestDto;
 import com.example.coupon_app.entity.Coupon;
 import com.example.coupon_app.service.CouponService;
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/coupons")
@@ -15,28 +16,9 @@ public class CouponController {
         this.couponService = couponService;
     }
 
-    @GetMapping
-    public List<Coupon> getAllCoupons(){
-        return couponService.getAllCoupons();
-    }
-
-    @GetMapping("/user/{userId}")
-    public List<Coupon> getCouponsByUserId(@PathVariable Integer userId){
-        return couponService.getCouponsByUserId(userId);
-    }
-
     @PostMapping
-    public Coupon createCoupon(@RequestBody Coupon coupon){
-        return couponService.createCoupon(coupon);
-    }
-
-    @DeleteMapping("/{id}")
-    public void deleteCoupon(@PathVariable Integer id){
-        couponService.deleteCoupon(id);
-    }
-
-    @PutMapping("/{id}")
-    public Coupon updateCoupon(@PathVariable Integer id, @RequestBody Coupon coupon){
-        return couponService.updateCoupon(id, coupon);
+    public ResponseEntity<Coupon> createCoupon(@RequestBody @Valid CouponRequestDto requestDto){
+        Coupon savedCoupon = couponService.createCoupon(requestDto);
+        return ResponseEntity.ok(savedCoupon);
     }
 }
