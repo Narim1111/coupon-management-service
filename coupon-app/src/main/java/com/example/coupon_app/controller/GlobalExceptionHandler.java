@@ -1,5 +1,6 @@
 package com.example.coupon_app.controller;
 
+import com.example.coupon_app.exception.CouponAlreadyExistsException;
 import com.example.coupon_app.exception.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,6 +41,16 @@ public class GlobalExceptionHandler {
         error.put("error", ex.getMessage());
 
         return new  ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(CouponAlreadyExistsException.class)
+    public ResponseEntity<Map<String, String>> hadleCouponAlreadyExists(CouponAlreadyExistsException ex){
+
+        Map<String, String> error = new HashMap<>();
+
+        error.put("error", ex.getMessage());
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("error", ex.getMessage()));
     }
 
 }
