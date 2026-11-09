@@ -1,6 +1,7 @@
 package com.example.coupon_app.service;
 
 import com.example.coupon_app.dto.CouponRequestDto;
+import com.example.coupon_app.dto.CouponResponseDto;
 import com.example.coupon_app.entity.Coupon;
 import com.example.coupon_app.entity.User;
 import com.example.coupon_app.exception.UserNotFoundException;
@@ -19,7 +20,7 @@ public class CouponService{
         this.userRepository = userRepository;
     }
 
-    public Coupon createCoupon(CouponRequestDto dto){
+    public CouponResponseDto createCoupon(CouponRequestDto dto){
         User user = userRepository.findById(dto.getUserId()).orElseThrow(() -> new UserNotFoundException(dto.getUserId()));
 
         Coupon coupon = new Coupon();
@@ -28,6 +29,7 @@ public class CouponService{
 
         coupon.setUser(user);
 
-        return couponRepository.save(coupon);
+        Coupon save = couponRepository.save(coupon);
+        return new CouponResponseDto(coupon.getId(), coupon.getCode(), coupon.getDiscountPercent(), coupon.getUser().getId());
     }
 }
